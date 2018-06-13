@@ -14,13 +14,13 @@ export default class App extends Component {
     generateColors = () => {
         let avalidablePositions = this.grid.reduce((acc, val, idx) => acc.concat(val.map((e, i) => `${idx}${i}`)), []);
         for (let pair = 0; pair < this.props.maxPairs; pair++) {
-            let color = this.getRandomColor();
-            for(let i = 0; i < 2; i++){
+            // let color = this.getRandomColor();
+            // for(let i = 0; i < 2; i++){
                 let re = this.randomElement(avalidablePositions);
                 let p = re.element.split('');
-                this.grid[+p[0]][+p[1]] = color;
+                this.grid[+p[0]][+p[1]] = 'green';
                 avalidablePositions.splice(re.index, 1);
-            }
+            // }
         }
     }
 
