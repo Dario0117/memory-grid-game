@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App';
+import Board from './components/Board';
 // import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App rows={5} cols={10} maxPairs={10}/>, document.getElementById('root'));
+ReactDOM.render(<Board rows={5} cols={10} maxPairs={10}/>, document.getElementById('root'));
 // registerServiceWorker();
