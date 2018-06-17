@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import './styles.css';
 import Row from './Row';
+import Cell from './Cell';
 
 export default class Board extends Component {
 
@@ -8,6 +10,7 @@ export default class Board extends Component {
 
         this.state = {
             attempts: 2,
+            remaningCells: this.props.maxPairs,
             mode: 'start',
             message: 'Get ready...'
         }
@@ -63,34 +66,58 @@ export default class Board extends Component {
         }
     }
 
+    handleCellclick = (e) => {
+        let isTD = e.target.tagName === 'TD';
+        if(!isTD) {
+            return;
+        }
+        let [row, col] = e.target.id.split('');
+        let isOnRecall = this.state.mode === 'recall';
+        let isGreen = this.realGrid[+row][+col] === 'green';
+        let isNowGreen = this.grid[+row][+col] === 'green';
+        if(isOnRecall && isGreen && !isNowGreen) {
+            console.log('green');
+            this.grid[+row][+col] = 'green';
+            this.setState({
+                remaningCells: this.state.remaningCells - 1
+            });
+        }
+    }
+
     render() {
-        if (this.state.mode === 'start') {
-            this.hideAllColors();
-            setTimeout(this.generateColors, 2000);
-        } else if (this.state.mode === 'memorize') {
-            setTimeout(() => {
+        switch (this.state.mode) {
+            case 'start':
                 this.hideAllColors();
-                this.setState({
-                    mode: 'recall',
-                    message: 'Recall!!!'
-                });
-            }, 5000);
+                setTimeout(this.generateColors, 2000);
+                break;
+            case 'memorize':
+                setTimeout(() => {
+                    this.hideAllColors();
+                    this.setState({
+                        mode: 'recall',
+                        message: 'Recall!!!'
+                    });
+                }, 5000);
+                break;
+            default:
+                break;
         }
         return (
             <center>
-                <table>
+                <table onClick={this.handleCellclick}>
                     <tbody>
-                        {
-                            this.grid
-                                .map((row, idx) =>
-                                    <Row
-                                        key={idx}
-                                        rowId={idx}
-                                        cols={row}
-                                        rCols={this.realGrid[idx]}
-                                    />
-                                )
-                        }
+                        {this.grid.map((row, irow) => {
+                            return (<Row key={irow}>
+                                {row.map((cell, icell) => {
+                                    return (
+                                    <Cell 
+                                        key={`${irow}${icell}`} 
+                                        id={`${irow}${icell}`} 
+                                        color={this.grid[irow][icell]} 
+                                    />)
+                                })}
+                            </Row>)
+                        })}
                     </tbody>
                 </table>
                 <h1>{this.state.message}</h1>

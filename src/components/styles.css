@@ -1,0 +1,12 @@
+body {
+    text-align: center;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    border: 1px solid #aaa;
+    margin-right: 4px;
+    cursor: pointer;
+}
