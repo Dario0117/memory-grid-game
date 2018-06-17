@@ -22,6 +22,7 @@ export default class Board extends Component {
         this.realGrid = new Array(this.props.rows)
             .fill(0)
             .map(el => new Array(this.props.cols).fill(0));
+        this.greenCells = [];
     }
 
     generateColors = () => {
@@ -31,6 +32,7 @@ export default class Board extends Component {
             // for(let i = 0; i < 2; i++){
             let re = this.randomElement(availablePositions);
             let p = re.element.split('');
+            this.greenCells.push({row: +p[0], col: +p[1]});
             this.grid[+p[0]][+p[1]] = 'green';
             this.realGrid[+p[0]][+p[1]] = 'green';
             availablePositions.splice(re.index, 1);
@@ -114,6 +116,13 @@ export default class Board extends Component {
             mode: 'start',
             message: 'Get ready...'
         });
+        this.greenCells = [];
+    }
+
+    showGreenCells = () => {
+        this.greenCells.forEach(el => {
+            this.grid[el.row][el.col] = 'green';
+        });
     }
 
     render() {
@@ -134,6 +143,7 @@ export default class Board extends Component {
                 break;
             case 'win':
             case 'loose':
+                this.showGreenCells();
                 retry = <button onClick={this.resetGame}>Play again?</button>;
                 break;
             default:
