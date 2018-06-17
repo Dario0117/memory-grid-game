@@ -9,11 +9,12 @@ export default class Board extends Component {
         super(props);
 
         this.state = {
-            attempts: 2,
-            remaningCells: this.props.maxPairs,
             mode: 'start',
             message: 'Get ready...'
         }
+
+        this.attempts = 2;
+        this.remaningCells = this.props.maxPairs;
 
         this.grid = new Array(this.props.rows)
             .fill(0)
@@ -68,23 +69,55 @@ export default class Board extends Component {
 
     handleCellclick = (e) => {
         let isTD = e.target.tagName === 'TD';
-        if(!isTD) {
+        if (!isTD) {
             return;
         }
+
         let [row, col] = e.target.id.split('');
         let isOnRecall = this.state.mode === 'recall';
         let isGreen = this.realGrid[+row][+col] === 'green';
+        let isRed = this.grid[+row][+col] === 'red';
         let isNowGreen = this.grid[+row][+col] === 'green';
-        if(isOnRecall && isGreen && !isNowGreen) {
-            console.log('green');
-            this.grid[+row][+col] = 'green';
+
+        if (isOnRecall) {
+            if (!isGreen && !isRed) {
+                this.grid[+row][+col] = 'red';
+                this.attempts--;
+            } else if (!isNowGreen && !isRed) {
+                this.grid[+row][+col] = 'green';
+                this.remaningCells--;
+            }
+            this.forceUpdate();
+            this.checkGameStatus();
+        }
+    }
+
+    checkGameStatus = () => {
+        if (this.attempts === 0) {
             this.setState({
-                remaningCells: this.state.remaningCells - 1
+                mode: 'loose',
+                message: 'You loose :c'
+            });
+        }
+        if (this.remaningCells === 0) {
+            this.setState({
+                mode: 'win',
+                message: 'You win!!!!'
             });
         }
     }
 
+    resetGame = () => {
+        this.attempts = 2;
+        this.remaningCells = this.props.maxPairs;
+        this.setState({
+            mode: 'start',
+            message: 'Get ready...'
+        });
+    }
+
     render() {
+        let retry = null;
         switch (this.state.mode) {
             case 'start':
                 this.hideAllColors();
@@ -99,6 +132,10 @@ export default class Board extends Component {
                     });
                 }, 5000);
                 break;
+            case 'win':
+            case 'loose':
+                retry = <button onClick={this.resetGame}>Play again?</button>;
+                break;
             default:
                 break;
         }
@@ -110,17 +147,19 @@ export default class Board extends Component {
                             return (<Row key={irow}>
                                 {row.map((cell, icell) => {
                                     return (
-                                    <Cell 
-                                        key={`${irow}${icell}`} 
-                                        id={`${irow}${icell}`} 
-                                        color={this.grid[irow][icell]} 
-                                    />)
+                                        <Cell
+                                            key={`${irow}${icell}`}
+                                            id={`${irow}${icell}`}
+                                            color={this.grid[irow][icell]}
+                                        />)
                                 })}
                             </Row>)
                         })}
                     </tbody>
                 </table>
-                <h1>{this.state.message}</h1>
+                <h2>{this.state.message}</h2>
+                <p>Remaining cells: {this.remaningCells} | Remaining attempts: {this.attempts}</p>
+                {retry}
             </center>
         )
     }
