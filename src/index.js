@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Board from './components/Board';
+import Game from './components/Game';
 // import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<Board rows={5} cols={10} maxPairs={10}/>, document.getElementById('root'));
+ReactDOM.render(<Game />, document.getElementById('root'));
 // registerServiceWorker();

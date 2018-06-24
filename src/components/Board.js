@@ -13,8 +13,9 @@ export default class Board extends Component {
             message: 'Get ready...'
         }
 
-        this.attempts = 2;
-        this.remaningCells = this.props.maxPairs;
+        this.attempts = this.props.attempts;
+        this.remaningCells = this.props.recallCells;
+        this.recallCells = this.props.recallCells;
 
         this.grid = new Array(this.props.rows)
             .fill(0)
@@ -27,30 +28,18 @@ export default class Board extends Component {
 
     generateColors = () => {
         let availablePositions = this.grid.reduce((acc, val, idx) => acc.concat(val.map((e, i) => `${idx}${i}`)), []);
-        for (let pair = 0; pair < this.props.maxPairs; pair++) {
-            // let color = this.getRandomColor();
-            // for(let i = 0; i < 2; i++){
+        for (let pair = 0; pair < this.recallCells; pair++) {
             let re = this.randomElement(availablePositions);
             let p = re.element.split('');
-            this.greenCells.push({row: +p[0], col: +p[1]});
+            this.greenCells.push({ row: +p[0], col: +p[1] });
             this.grid[+p[0]][+p[1]] = 'green';
             this.realGrid[+p[0]][+p[1]] = 'green';
             availablePositions.splice(re.index, 1);
-            // }
         }
         this.setState({
             mode: 'memorize',
             message: 'Memorize...'
         });
-    }
-
-    getRandomColor = () => {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
     }
 
     randomElement = array => {
@@ -111,7 +100,7 @@ export default class Board extends Component {
 
     resetGame = () => {
         this.attempts = 2;
-        this.remaningCells = this.props.maxPairs;
+        this.remaningCells = this.recallCells;
         this.setState({
             mode: 'start',
             message: 'Get ready...'
@@ -144,7 +133,12 @@ export default class Board extends Component {
             case 'win':
             case 'loose':
                 this.showGreenCells();
-                retry = <button onClick={this.resetGame}>Play again?</button>;
+                retry = (
+                    <div>
+                        <button onClick={this.resetGame}>Play again?</button>
+                        <button onClick={this.props.reconfigure}>Reconfigure game</button>
+                    </div>
+                );
                 break;
             default:
                 break;
