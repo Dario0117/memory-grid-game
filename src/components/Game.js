@@ -68,6 +68,8 @@ export default class Game extends Component {
             case 'recallCells':
                 if (value > maxRecallCells) {
                     message = `The number of recall cells can't be greater than ${maxRecallCells}`;
+                }else {
+                    recallCells = value;
                 }
                 break;
             default:
