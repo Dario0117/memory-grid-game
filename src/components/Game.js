@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Board from './Board';
 
 export default class Game extends Component {
-    
+
     constructor(props) {
         super(props);
 
@@ -68,7 +68,9 @@ export default class Game extends Component {
             case 'recallCells':
                 if (value > maxRecallCells) {
                     message = `The number of recall cells can't be greater than ${maxRecallCells}`;
-                }else {
+                } else if (value < 1) {
+                    message = `The number of recall cells must be greater than 1`;
+                }else{
                     recallCells = value;
                 }
                 break;
