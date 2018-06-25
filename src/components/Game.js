@@ -9,7 +9,8 @@ export default class Game extends Component {
         this.minValues = {
             rows: 3,
             cols: 3,
-            baitCells: 3
+            baitCells: 3,
+            recallCells: 1,
         };
 
         this.state = {
@@ -75,8 +76,8 @@ export default class Game extends Component {
             case 'recallCells':
                 if (value > maxRecallCells) {
                     message = `The number of recall cells can't be greater than ${maxRecallCells}`;
-                } else if (value < 1) {
-                    message = `The number of recall cells must be greater than 1`;
+                } else if (value < this.minValues.recallCells) {
+                    message = `The number of recall cells must be greater than ${this.minValues.recallCells}`;
                 }else{
                     recallCells = value;
                 }
