@@ -8,7 +8,8 @@ export default class Game extends Component {
 
         this.minValues = {
             rows: 3,
-            cols: 3
+            cols: 3,
+            baitCells: 3
         };
 
         this.state = {
@@ -33,24 +34,30 @@ export default class Game extends Component {
         });
     }
 
+    getMaxRecallCells = (name, value) => {
+        let maxRecallCells = 0;
+        switch (name) {
+            case 'cols':
+                maxRecallCells = ((this.state.rows * value) - this.minValues.baitCells);
+                break;
+            case 'rows':
+                maxRecallCells = ((this.state.cols * value) - this.minValues.baitCells);
+                break;
+            default:
+                maxRecallCells = ((this.state.rows * this.state.cols) - this.minValues.baitCells);
+                break;
+        }
+        return maxRecallCells;
+    }
+
     handleFormChange = e => {
 
         e.preventDefault();
         let { name, value } = e.target;
         let message = '';
         let recallCells = this.state.recallCells;
-        let maxRecallCells = 0;
-        switch (name) {
-            case 'cols':
-                maxRecallCells = ((this.state.rows * value) - 3);
-                break;
-            case 'rows':
-                maxRecallCells = ((this.state.cols * value) - 3);
-                break;
-            default:
-                maxRecallCells = ((this.state.rows * this.state.cols) - 3);
-                break;
-        }
+        let maxRecallCells = this.getMaxRecallCells(name, value);
+        
         switch (name) {
             case 'cols':
             case 'rows':
